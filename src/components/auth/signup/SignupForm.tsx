@@ -12,7 +12,7 @@ type Inputs = {
   email: string;
   phone: string;
   university: string;
-  job: string;
+  office: string;
   password: string;
   confirmPassword: string;
   gender: string;
@@ -23,9 +23,17 @@ type Props = {
   setActive: React.Dispatch<React.SetStateAction<number>>;
   markComplete: Function;
   nextStep: Function;
+  formData: any;
+  setFormData: React.Dispatch<React.SetStateAction<any>>;
 };
 
-const SignupForm = ({ setActive, markComplete, nextStep }: Props) => {
+const SignupForm = ({
+  setActive,
+  markComplete,
+  nextStep,
+  formData,
+  setFormData,
+}: Props) => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConPassword, setShowConPassword] = useState(false);
 
@@ -34,13 +42,15 @@ const SignupForm = ({ setActive, markComplete, nextStep }: Props) => {
     handleSubmit,
     watch,
     formState: { errors, isValid },
-  } = useForm<Inputs>({ mode: "all" });
+  } = useForm<Inputs>({ mode: "all", defaultValues: formData });
 
   const password = useRef<string>();
   password.current = watch("password", "");
 
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     console.log(data);
+
+    setFormData(data);
 
     setActive(2);
     markComplete(1);
@@ -175,16 +185,16 @@ const SignupForm = ({ setActive, markComplete, nextStep }: Props) => {
           </FieldName>
           <Input
             type="text"
-            className={errors.job && "input_error"}
+            className={errors.office && "input_error"}
             placeholder="Vice Chancellor"
-            {...register("job", {
+            {...register("office", {
               required: "What is your job title?",
             })}
           />
-          {errors.job && (
+          {errors.office && (
             <span className="errors">
               <RiErrorWarningFill />
-              {errors.job.message}
+              {errors.office.message}
             </span>
           )}
         </InputContainer>

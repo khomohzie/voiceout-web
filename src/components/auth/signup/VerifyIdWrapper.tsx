@@ -7,6 +7,8 @@ type Props = {
   markComplete: Function;
   nextStep: Function;
   prevStep: Function;
+  formData: any;
+  setFormData: React.Dispatch<React.SetStateAction<any>>;
 };
 
 const VerifyIdWrapper = ({
@@ -14,6 +16,8 @@ const VerifyIdWrapper = ({
   markComplete,
   nextStep,
   prevStep,
+  formData,
+  setFormData,
 }: Props) => {
   return (
     <Container>
@@ -22,6 +26,8 @@ const VerifyIdWrapper = ({
         markComplete={markComplete}
         nextStep={nextStep}
         prevStep={prevStep}
+        formData={formData}
+        setFormData={setFormData}
       />
       <ImageDiv>
         <img src="/images/verifyid.png" alt="Signup page image/illustration" />

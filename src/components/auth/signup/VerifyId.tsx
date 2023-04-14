@@ -4,6 +4,8 @@ import { BiCloudUpload } from "react-icons/bi";
 import { MdCancel } from "react-icons/md";
 import { BtnPrimary } from "@styles/common";
 import { useForm, SubmitHandler } from "react-hook-form";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 type TInput = {
   frontId: File[];
@@ -15,20 +17,60 @@ type Props = {
   markComplete: Function;
   nextStep: Function;
   prevStep: Function;
+  formData: any;
+  setFormData: React.Dispatch<React.SetStateAction<any>>;
 };
 
-const VerifyId = ({ setActive, markComplete, nextStep, prevStep }: Props) => {
+const VerifyId = ({
+  setActive,
+  markComplete,
+  nextStep,
+  prevStep,
+  formData,
+  setFormData,
+}: Props) => {
   const {
     register,
     handleSubmit,
     formState: { errors, isValid },
-  } = useForm<TInput>({ mode: "all" });
+  } = useForm<TInput>({ mode: "all", defaultValues: formData });
 
   const [frontFileName, setFrontFileName] = useState("");
   const [backFileName, setBackFileName] = useState("");
 
   const onSubmit: SubmitHandler<TInput> = async (data) => {
-    console.log(data);
+    // console.log(data);
+
+    setFormData({ ...formData, data });
+
+    var bodyFormData = new FormData();
+
+    bodyFormData.append("data", JSON.stringify(formData));
+    bodyFormData.append("id_photo", data.frontId[0]);
+    bodyFormData.append("id_photo", data.backId[0]);
+
+    console.log(bodyFormData.get("data"));
+    // return;
+
+    try {
+      axios({
+        method: "post",
+        url: "http://localhost:4000/api/superadmin/register",
+        data: bodyFormData,
+        headers: { "Content-Type": "multipart/form-data" },
+      })
+        .then(function (response) {
+          //handle success
+          console.log(response);
+        })
+        .catch(function (response) {
+          //handle error
+          console.log(response);
+        });
+    } catch (error: any) {
+      console.log(error);
+      toast.error(error);
+    }
 
     setActive(3);
     markComplete(2);

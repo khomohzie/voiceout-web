@@ -37,6 +37,8 @@ const Signup = () => {
             setActive={setActive}
             markComplete={markComplete}
             nextStep={nextStep}
+            formData={formData}
+            setFormData={setFormData}
           />
         </>
       );
@@ -51,6 +53,8 @@ const Signup = () => {
             markComplete={markComplete}
             nextStep={nextStep}
             prevStep={prevStep}
+            formData={formData}
+            setFormData={setFormData}
           />
         </>
       );

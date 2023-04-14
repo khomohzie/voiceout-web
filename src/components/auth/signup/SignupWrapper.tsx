@@ -6,15 +6,25 @@ type Props = {
   setActive: React.Dispatch<React.SetStateAction<number>>;
   markComplete: Function;
   nextStep: Function;
+  formData: any;
+  setFormData: React.Dispatch<React.SetStateAction<any>>;
 };
 
-const SignupWrapper = ({ setActive, markComplete, nextStep }: Props) => {
+const SignupWrapper = ({
+  setActive,
+  markComplete,
+  nextStep,
+  formData,
+  setFormData,
+}: Props) => {
   return (
     <Container>
       <SignupForm
         setActive={setActive}
         markComplete={markComplete}
         nextStep={nextStep}
+        formData={formData}
+        setFormData={setFormData}
       />
       <ImageDiv>
         <img src="/images/signup.png" alt="Signup page image/illustration" />
