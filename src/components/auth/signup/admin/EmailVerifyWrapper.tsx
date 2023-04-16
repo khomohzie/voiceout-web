@@ -1,16 +1,35 @@
 import React from "react";
 import styled from "styled-components";
-import Success from "./Success";
+import VerifyId from "../VerifyId";
+import EmailVerify from "./EmailVerify";
 
 type Props = {
+  setActive: React.Dispatch<React.SetStateAction<number>>;
   markComplete: Function;
-  staffSignup?: boolean;
+  nextStep: Function;
+  prevStep: Function;
+  formData: any;
+  setFormData: React.Dispatch<React.SetStateAction<any>>;
 };
 
-const SuccessWrapper = ({ markComplete, staffSignup }: Props) => {
+const EmailVerifyWrapper = ({
+  setActive,
+  markComplete,
+  nextStep,
+  prevStep,
+  formData,
+  setFormData,
+}: Props) => {
   return (
     <Container>
-      <Success markComplete={markComplete} staffSignup={staffSignup} />
+      <EmailVerify
+        setActive={setActive}
+        markComplete={markComplete}
+        nextStep={nextStep}
+        prevStep={prevStep}
+        formData={formData}
+        setFormData={setFormData}
+      />
       <ImageDiv>
         <img src="/images/verifyid.png" alt="Signup page image/illustration" />
       </ImageDiv>
@@ -50,4 +69,4 @@ const ImageDiv = styled.div`
   }
 `;
 
-export default SuccessWrapper;
+export default EmailVerifyWrapper;

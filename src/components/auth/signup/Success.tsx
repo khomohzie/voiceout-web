@@ -5,9 +5,10 @@ import { FiLogIn } from "react-icons/fi";
 
 type Props = {
   markComplete: Function;
+  staffSignup?: boolean;
 };
 
-const Success = ({ markComplete }: Props) => {
+const Success = ({ markComplete, staffSignup }: Props) => {
   useEffect(() => {
     markComplete(3);
   }, []);
@@ -19,14 +20,18 @@ const Success = ({ markComplete }: Props) => {
       <Title>Success</Title>
 
       <SuccessMessage>
-        Profile Gets verified in 24 to 48 hours, users will not be able to do
-        any activity, they can only have read access.
+        {!staffSignup
+          ? "Profile Gets verified in 24 to 48 hours, users will not be able to do any activity, they can only have read access."
+          : `You can proceed to use ${process.env.NEXT_PUBLIC_APPNAME} and its services.`}
       </SuccessMessage>
 
       <BtnWrapper>
         <a href="/auth/login">
           <BtnPrimary className="custom_btn">
-            Login <FiLogIn />
+            {!staffSignup
+              ? "Login"
+              : `Back to ${process.env.NEXT_PUBLIC_APPNAME}`}{" "}
+            <FiLogIn />
           </BtnPrimary>
         </a>
       </BtnWrapper>

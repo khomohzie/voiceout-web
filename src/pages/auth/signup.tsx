@@ -1,9 +1,12 @@
 import Jumbotron from "@components/app/Jumbotron";
 import ProgressBar from "@components/app/ProgressBar";
-import SignupWrapper from "@components/auth/signup/SignupWrapper";
+import EmailVerifyWrapper from "@components/auth/signup/admin/EmailVerifyWrapper";
+import SignupWrapper from "@components/auth/signup/admin/SignupWrapper";
 import SuccessWrapper from "@components/auth/signup/SuccessWrapper";
-import VerifyIdWrapper from "@components/auth/signup/VerifyIdWrapper";
 import React, { useState } from "react";
+
+// Pass this string as a props to the signup Success Component
+const staffSignup: boolean = true;
 
 const Signup = () => {
   // Keep track of the currently rendered form and completed form(s).
@@ -49,7 +52,7 @@ const Signup = () => {
           <Jumbotron
             ProgressBar={<ProgressBar active={active} completed={completed} />}
           />
-          <VerifyIdWrapper
+          <EmailVerifyWrapper
             setActive={setActive}
             markComplete={markComplete}
             nextStep={nextStep}
@@ -65,7 +68,7 @@ const Signup = () => {
           <Jumbotron
             ProgressBar={<ProgressBar active={active} completed={completed} />}
           />
-          <SuccessWrapper markComplete={markComplete} />
+          <SuccessWrapper markComplete={markComplete} staffSignup />
         </>
       );
   }
