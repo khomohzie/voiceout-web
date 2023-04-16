@@ -38,7 +38,7 @@ const EmailVerify = ({
       setLoading(true);
 
       const { data } = await axios.put(
-        `${process.env.NEXT_PUBLIC_API}/auth/verify`,
+        `${process.env.NEXT_PUBLIC_API}/admin/auth/verify`,
         {
           email: formData.data.email,
           code: otp,
