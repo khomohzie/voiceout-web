@@ -6,6 +6,7 @@ import { BtnPrimary } from "@styles/common";
 import { useForm, SubmitHandler } from "react-hook-form";
 import axios from "axios";
 import { toast } from "react-toastify";
+import Loader from "@components/app/Loader";
 
 type TInput = {
   frontId: File[];
@@ -32,49 +33,50 @@ const VerifyId = ({
   const {
     register,
     handleSubmit,
-    formState: { errors, isValid },
+    formState: { errors, isValid, isSubmitting },
   } = useForm<TInput>({ mode: "all", defaultValues: formData });
 
   const [frontFileName, setFrontFileName] = useState("");
   const [backFileName, setBackFileName] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const onSubmit: SubmitHandler<TInput> = async (data) => {
-    // console.log(data);
-
     setFormData({ ...formData, data });
 
-    var bodyFormData = new FormData();
+    let bodyFormData = new FormData();
 
     bodyFormData.append("data", JSON.stringify(formData));
     bodyFormData.append("id_photo", data.frontId[0]);
     bodyFormData.append("id_photo", data.backId[0]);
 
-    console.log(bodyFormData.get("data"));
-    // return;
-
     try {
-      axios({
+      setLoading(true);
+
+      const response = await axios({
         method: "post",
-        url: "http://localhost:4000/api/superadmin/register",
+        url: `${process.env.NEXT_PUBLIC_API}/superadmin/register`,
         data: bodyFormData,
         headers: { "Content-Type": "multipart/form-data" },
-      })
-        .then(function (response) {
-          //handle success
-          console.log(response);
-        })
-        .catch(function (response) {
-          //handle error
-          console.log(response);
-        });
-    } catch (error: any) {
-      console.log(error);
-      toast.error(error);
-    }
+      });
 
-    setActive(3);
-    markComplete(2);
-    // nextStep();
+      toast.success(response.data.message);
+
+      setLoading(false);
+
+      setActive(3);
+      markComplete(2);
+      nextStep();
+    } catch (error: any) {
+      let isErrorArray = Array.isArray(error.response.data);
+
+      if (isErrorArray) {
+        toast.error(error.response.data.message[0]);
+      } else {
+        toast.error(error.response.data.message);
+      }
+
+      setLoading(false);
+    }
   };
 
   return (
@@ -175,7 +177,7 @@ const VerifyId = ({
           </div>
           <div className="button">
             <BtnPrimary type="submit" disabled={!isValid}>
-              Submit
+              {loading ? <Loader width={30} height={30} /> : "Submit"}
             </BtnPrimary>
           </div>
         </ButtonWrapper>

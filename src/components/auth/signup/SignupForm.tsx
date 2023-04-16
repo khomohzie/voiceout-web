@@ -301,7 +301,7 @@ const SignupForm = ({
 
         <SigninText>
           Already a member?
-          <Link href="#"> Sign In</Link>
+          <Link href="/auth/login"> Sign In</Link>
         </SigninText>
       </form>
     </Container>
