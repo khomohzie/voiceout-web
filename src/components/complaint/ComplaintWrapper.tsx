@@ -16,7 +16,7 @@ const ComplaintWrapper = ({ admin }: { admin?: boolean }) => {
   const retrieveComplaint = async () => {
     try {
       const { data } = await axios.get(
-        `${process.env.NEXT_PUBLIC_API}/complaints/${router.query.slug}`
+        `${process.env.NEXT_PUBLIC_API}/complaints/admin/${router.query.slug}`
       );
 
       setComplaint(data.data);
