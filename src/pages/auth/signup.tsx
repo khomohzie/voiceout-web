@@ -3,12 +3,25 @@ import ProgressBar from "@components/app/ProgressBar";
 import EmailVerifyWrapper from "@components/auth/signup/admin/EmailVerifyWrapper";
 import SignupWrapper from "@components/auth/signup/admin/SignupWrapper";
 import SuccessWrapper from "@components/auth/signup/SuccessWrapper";
-import React, { useState } from "react";
+import { AuthContext } from "context";
+import { useRouter } from "next/router";
+import { useContext, useEffect, useState } from "react";
 
 // Pass this string as a props to the signup Success Component
 const staffSignup: boolean = true;
 
 const Signup = () => {
+  const router = useRouter();
+
+  // Redirect user to homepage if already logged in.
+  const {
+    state: { user },
+  } = useContext(AuthContext);
+
+  useEffect(() => {
+    if (user !== null) router.push("/");
+  }, [user]);
+
   // Keep track of the currently rendered form and completed form(s).
   const [active, setActive] = useState(1);
   const [completed, setCompleted] = useState([0]);
@@ -68,7 +81,10 @@ const Signup = () => {
           <Jumbotron
             ProgressBar={<ProgressBar active={active} completed={completed} />}
           />
-          <SuccessWrapper markComplete={markComplete} staffSignup />
+          <SuccessWrapper
+            markComplete={markComplete}
+            staffSignup={staffSignup}
+          />
         </>
       );
   }

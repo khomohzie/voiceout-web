@@ -3,9 +3,22 @@ import ProgressBar from "@components/app/ProgressBar";
 import SignupWrapper from "@components/auth/signup/SignupWrapper";
 import SuccessWrapper from "@components/auth/signup/SuccessWrapper";
 import VerifyIdWrapper from "@components/auth/signup/VerifyIdWrapper";
-import React, { useState } from "react";
+import { AuthContext } from "context";
+import { useRouter } from "next/router";
+import { useContext, useEffect, useState } from "react";
 
 const Signup = () => {
+  const router = useRouter();
+
+  // Redirect user to homepage if already logged in.
+  const {
+    state: { user },
+  } = useContext(AuthContext);
+
+  useEffect(() => {
+    if (user !== null) router.push("/");
+  }, [user]);
+
   // Keep track of the currently rendered form and completed form(s).
   const [active, setActive] = useState(1);
   const [completed, setCompleted] = useState([0]);

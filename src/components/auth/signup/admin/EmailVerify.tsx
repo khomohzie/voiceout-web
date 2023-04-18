@@ -1,15 +1,11 @@
-import React, { useState } from "react";
-import styled from "styled-components";
+import Loader from "@components/app/Loader";
 import { BtnPrimary } from "@styles/common";
 import axios from "axios";
-import { toast } from "react-toastify";
-import Loader from "@components/app/Loader";
+import { AuthContext } from "context";
+import React, { useContext, useState } from "react";
 import OTPInput from "react-otp-input";
-
-type TInput = {
-  frontId: File[];
-  backId: File[];
-};
+import { toast } from "react-toastify";
+import styled from "styled-components";
 
 type Props = {
   setActive: React.Dispatch<React.SetStateAction<number>>;
@@ -27,6 +23,12 @@ const EmailVerify = ({
   prevStep,
   formData,
 }: Props) => {
+  // state access
+  const {
+    state: { user },
+    dispatch,
+  } = useContext(AuthContext);
+
   const [otp, setOtp] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -46,6 +48,14 @@ const EmailVerify = ({
       );
 
       toast.success(data.message);
+
+      dispatch!({
+        type: "LOGIN",
+        payload: data.data,
+      });
+
+      // save in local storage in order not to lose user data on page refresh
+      window.localStorage.setItem("user", JSON.stringify(data.data));
 
       setLoading(false);
 
