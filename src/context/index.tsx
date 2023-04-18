@@ -55,6 +55,26 @@ const Provider = ({ children }: { children: ReactNode }) => {
     });
   }, []);
 
+  axios.interceptors.request.use(
+    (config) => {
+      const user = JSON.parse(window.localStorage.getItem("user")!);
+      if (user) {
+        config.headers["Authorization"] = `Bearer ${user.accessToken}`;
+      }
+      return config;
+    },
+    (error) => {
+      let isErrorArray = Array.isArray(error.response.data);
+
+      if (isErrorArray) {
+        toast.error(error.response.data.message[0]);
+      } else {
+        toast.error(error.response.data.message);
+      }
+      return Promise.reject(error);
+    }
+  );
+
   axios.interceptors.response.use(
     function (response) {
       // Any status code that lies within the range of 2xx will cause this function to trigger
