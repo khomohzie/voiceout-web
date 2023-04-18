@@ -8,6 +8,11 @@ import {
   FaSeedling,
   FaUser,
 } from "react-icons/fa";
+import { useContext, useEffect, useState } from "react";
+import { AuthContext } from "context";
+import { useRouter } from "next/router";
+import { toast } from "react-toastify";
+import axios from "axios";
 
 interface LinkItemProp {
   itemName: string;
@@ -40,13 +45,77 @@ const LinkItem = ({
 };
 
 const Sidebar = () => {
+  // state access
+  const [user, setUser] = useState();
+
+  const router = useRouter();
+
+  if (typeof window !== "undefined") {
+    useEffect(() => {
+      if (window.localStorage.getItem("user")?.length !== 0) {
+        setUser(JSON.parse(window.localStorage.getItem("user")!));
+      }
+    }, []);
+  }
+
   return (
     <Container>
       <Logo>{process.env.NEXT_PUBLIC_APPNAME}</Logo>
 
       <LinkItem page="/" itemName="Dashboard" icon={<MdDashboard />} />
-      <LinkItem page="/complaints" itemName="Complaints" icon={<FaComment />} />
-      <LinkItem page="/admins" itemName="Administrators" icon={<FaUser />} />
+      {(user as any)?.user?.id_photo_front && (
+        <LinkItem
+          page="/complaints"
+          itemName="Complaints"
+          icon={<FaComment />}
+        />
+      )}
+      {!(user as any)?.user?.id_photo_front && (
+        <LinkItem
+          page="/complaints/admin"
+          itemName="Complaints"
+          icon={<FaComment />}
+        />
+      )}
+      {(user as any)?.user?.id_photo_front && (
+        <LinkItem page="/admins" itemName="Administrators" icon={<FaUser />} />
+      )}
+      <Link
+        href="#"
+        style={{ color: "white" }}
+        onClick={async () => {
+          try {
+            const { data } = await axios.post(
+              `${process.env.NEXT_PUBLIC_API}${
+                (user as any)?.user?.id_photo_front
+                  ? `/auth/logout/superadmin`
+                  : `/auth/logout/admin`
+              }`
+            );
+
+            toast.success(data.message);
+
+            // save in local storage in order not to lose user data on page refresh
+            window.localStorage.removeItem("user");
+
+            if ((user as any)?.user?.id_photo_front) {
+              router.push("/auth/university/login");
+            } else {
+              router.push("/auth/login");
+            }
+          } catch (error: any) {
+            let isErrorArray = Array.isArray(error.response.data);
+
+            if (isErrorArray) {
+              toast.error(error.response.data.message[0]);
+            } else {
+              toast.error(error.response.data.message);
+            }
+          }
+        }}
+      >
+        Logout
+      </Link>
       <LinkItem page="/" itemName="Settings" icon={<MdSettings />} />
     </Container>
   );

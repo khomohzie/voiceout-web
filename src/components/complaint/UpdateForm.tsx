@@ -6,9 +6,10 @@ import styled from "styled-components";
 
 type TProps = {
   complaintId: string;
+  admin?: boolean;
 };
 
-const UpdateForm = ({ complaintId }: TProps) => {
+const UpdateForm = ({ complaintId, admin }: TProps) => {
   const [status, setStatus] = useState("");
 
   const handleSubmit = async (e: any) => {
@@ -16,9 +17,11 @@ const UpdateForm = ({ complaintId }: TProps) => {
 
     try {
       const { data } = await axios.patch(
-        `${
-          process.env.NEXT_PUBLIC_API
-        }${`/complaints/status/superadmin/${complaintId}`}`,
+        `${process.env.NEXT_PUBLIC_API}${
+          admin
+            ? `/complaints/status/${complaintId}`
+            : `/complaints/status/superadmin/${complaintId}`
+        }`,
         {
           newStatus: status,
         }

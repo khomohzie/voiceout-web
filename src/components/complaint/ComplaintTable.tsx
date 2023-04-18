@@ -8,13 +8,15 @@ import "react-super-responsive-table/dist/SuperResponsiveTableStyle.css";
 import { toast } from "react-toastify";
 import styled from "styled-components";
 
-export default function ComplaintTable() {
+export default function ComplaintTable({ admin }: { admin: boolean }) {
   const [complaints, setComplaints] = useState<TComplaints[]>();
 
   const retrieveComplaints = async () => {
     try {
       const { data } = await axios.get(
-        `${process.env.NEXT_PUBLIC_API}/superadmin/complaints`
+        `${process.env.NEXT_PUBLIC_API}${
+          admin ? `/admin/complaints` : `/superadmin/complaints`
+        }`
       );
 
       setComplaints(data.data);
@@ -52,7 +54,13 @@ export default function ComplaintTable() {
             {complaints.map((complaint) => (
               <Tr key={complaint._id}>
                 <Td>
-                  <Link href={`/complaints/${complaint._id}`}>
+                  <Link
+                    href={
+                      admin
+                        ? `/complaints/admin/${complaint._id}`
+                        : `/complaints/${complaint._id}`
+                    }
+                  >
                     {complaint.subject}
                   </Link>
                 </Td>

@@ -8,7 +8,7 @@ import styled from "styled-components";
 import UpdateForm from "./UpdateForm";
 import ReassignForm from "./ReassignForm";
 
-const ComplaintWrapper = () => {
+const ComplaintWrapper = ({ admin }: { admin?: boolean }) => {
   const router = useRouter();
 
   const [complaint, setComplaint] = useState<TComplaints>();
@@ -63,9 +63,9 @@ const ComplaintWrapper = () => {
           <DetailHead>Date Submitted</DetailHead>
           <DetailBody>{new Date(complaint.createdAt).toUTCString()}</DetailBody>
 
-          <UpdateForm complaintId={complaint._id} />
+          <UpdateForm complaintId={complaint._id} admin={admin} />
 
-          <ReassignForm complaintId={complaint._id} />
+          {!admin && <ReassignForm complaintId={complaint._id} />}
         </>
       ) : (
         <Loader width={30} height={30} />
